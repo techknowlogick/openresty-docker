@@ -29,7 +29,7 @@ RUN apt-get update && apt-get -y install \
 
 # Compile openresty from source.
 RUN \
-  wget http://openresty.org/download/ngx_openresty-1.9.3.1.tar.gz && \
+  wget https://openresty.org/download/ngx_openresty-1.9.3.1.tar.gz && \
   tar -xzvf ngx_openresty-*.tar.gz && \
   rm -f ngx_openresty-*.tar.gz && \
   cd ngx_openresty-* && \
