@@ -48,6 +48,9 @@ WORKDIR /home/openresty
 # Add files to the container.
 ADD . /home/openresty
 
+# Expose volumes.
+VOLUME ["/etc/nginx"]
+
 # Set the entrypoint script.
 ENTRYPOINT ["./entrypoint"]
 
