@@ -3,12 +3,10 @@
 #
 # This docker contains openresty (nginx) compiled from source with useful optional modules installed.
 #
-# http://github.com/tenstartups/openresty-docker
+# Based on http://github.com/tenstartups/openresty-docker
 #
 
 FROM debian:jessie
-
-MAINTAINER Marc Lennox <marc.lennox@gmail.com>
 
 # Set environment.
 ENV \
@@ -25,20 +23,30 @@ RUN apt-get update && apt-get -y install \
   libssl-dev \
   nano \
   perl \
-  wget
+  wget \
+  apache2-threaded-dev \
+  libxml2-dev
 
-# Compile openresty from source.
+# Fetch and compile openresty and mod_security from source
 RUN \
-  wget https://openresty.org/download/ngx_openresty-1.9.3.1.tar.gz && \
-  tar -xzvf ngx_openresty-*.tar.gz && \
-  rm -f ngx_openresty-*.tar.gz && \
-  cd ngx_openresty-* && \
-  ./configure --with-pcre-jit --with-ipv6 && \
+  wget https://www.modsecurity.org/tarball/2.9.1-rc1/modsecurity-2.9.1-RC1.tar.gz && \
+  tar -zxvf modsecurity-*.tar.gz && \
+  rm -f modsecurity-*.tar.gz && \
+  cd modsecurity-* && \
+  ./configure --enable-standalone-module --disable-mlogc && \
+  make && \
+  cd .. && \
+  wget https://openresty.org/download/openresty-1.9.7.3.tar.gz && \
+  tar -xzvf openresty-*.tar.gz && \
+  rm -f openresty-*.tar.gz && \
+  cd openresty-* && \
+  ./configure --with-pcre-jit --with-ipv6 --add-module=../modsecurity-*/nginx/modsecurity && \
   make && \
   make install && \
   make clean && \
   cd .. && \
-  rm -rf ngx_openresty-*&& \
+  rm -rf openresty-* && \
+  rm -rf modsecurity-* && \
   ln -s /usr/local/openresty/nginx/sbin/nginx /usr/local/bin/nginx && \
   ldconfig
 
