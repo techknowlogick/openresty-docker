@@ -46,6 +46,8 @@ RUN \
   make clean && \
   cd .. && \
   rm -rf openresty-* && \
+  cp modsecurity-*/modsecurity.conf-recommended /usr/local/openresty/nginx/conf/modsecurity.conf && \
+  cp modsecurity-*/unicode.mapping /usr/local/openresty/nginx/conf/unicode.mapping && \
   rm -rf modsecurity-* && \
   ln -s /usr/local/openresty/nginx/sbin/nginx /usr/local/bin/nginx && \
   ldconfig
