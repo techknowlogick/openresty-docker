@@ -36,7 +36,7 @@ RUN \
   ./configure --enable-standalone-module --disable-mlogc && \
   make && \
   cd .. && \
-  wget https://openresty.org/download/openresty-1.9.7.3.tar.gz && \
+  wget https://openresty.org/download/openresty-1.9.7.4.tar.gz && \
   tar -xzvf openresty-*.tar.gz && \
   rm -f openresty-*.tar.gz && \
   cd openresty-* && \
