@@ -29,7 +29,7 @@ RUN apt-get update && apt-get -y install \
 
 # Fetch and compile openresty and mod_security from source
 RUN \
-  wget https://www.modsecurity.org/tarball/2.9.1-rc1/modsecurity-2.9.1-RC1.tar.gz && \
+  wget https://www.modsecurity.org/tarball/2.9.1/modsecurity-2.9.1.tar.gz && \
   tar -zxvf modsecurity-*.tar.gz && \
   rm -f modsecurity-*.tar.gz && \
   cd modsecurity-* && \
