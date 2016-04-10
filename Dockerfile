@@ -48,6 +48,8 @@ RUN \
   rm -rf openresty-* && \
   cp modsecurity-*/modsecurity.conf-recommended /usr/local/openresty/nginx/conf/modsecurity.conf && \
   cp modsecurity-*/unicode.mapping /usr/local/openresty/nginx/conf/unicode.mapping && \
+  sed -i 's/\/var\/log\/modsec_audit.log/\/dev\/stdout/g' /usr/local/openresty/nginx/conf/modsecurity.conf && \
+  sed -i 's/DetectionOnly/On/g' /usr/local/openresty/nginx/conf/modsecurity.conf && \
   rm -rf modsecurity-* && \
   ln -s /usr/local/openresty/nginx/sbin/nginx /usr/local/bin/nginx && \
   ldconfig
