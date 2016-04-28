@@ -1,70 +1,23 @@
-#
-# Openresty docker image
-#
-# This docker contains openresty (nginx) compiled from source with useful optional modules installed.
-#
-# Based on http://github.com/tenstartups/openresty-docker
-#
+FROM alpine:3.3
 
-FROM debian:jessie
-
-# Set environment.
-ENV \
-  DEBIAN_FRONTEND=noninteractive \
-  TERM=xterm-color
-
-# Install packages.
-RUN apt-get update && apt-get -y install \
-  build-essential \
-  curl \
-  libreadline-dev \
-  libncurses5-dev \
-  libpcre3-dev \
-  libssl-dev \
-  nano \
-  perl \
-  wget \
-  apache2-threaded-dev \
-  libxml2-dev
-
-# Fetch and compile openresty and mod_security from source
 RUN \
-  wget https://www.modsecurity.org/tarball/2.9.1/modsecurity-2.9.1.tar.gz && \
-  tar -zxvf modsecurity-*.tar.gz && \
-  rm -f modsecurity-*.tar.gz && \
-  cd modsecurity-* && \
-  ./configure --enable-standalone-module --disable-mlogc && \
-  make && \
-  cd .. && \
-  wget https://openresty.org/download/openresty-1.9.7.4.tar.gz && \
-  tar -xzvf openresty-*.tar.gz && \
-  rm -f openresty-*.tar.gz && \
+  apk update && \
+  apk add \
+   --virtual build-deps \
+   make gcc musl-dev \
+   pcre-dev openssl-dev zlib-dev ncurses-dev readline-dev \
+   curl perl && \
+  curl -sL https://github.com/nbs-system/naxsi/archive/0.54.tar.gz | tar zxf - && \
+  curl -sL https://openresty.org/download/openresty-1.9.7.4.tar.gz | tar zxf - && \
   cd openresty-* && \
-  ./configure --with-pcre-jit --with-ipv6 --add-module=../modsecurity-*/nginx/modsecurity && \
+  ./configure --add-module=../naxsi-*/naxsi_src/ --with-pcre-jit --with-ipv6 && \
   make && \
   make install && \
   make clean && \
   cd .. && \
   rm -rf openresty-* && \
-  cp modsecurity-*/modsecurity.conf-recommended /usr/local/openresty/nginx/conf/modsecurity.conf && \
-  cp modsecurity-*/unicode.mapping /usr/local/openresty/nginx/conf/unicode.mapping && \
-  sed -i 's/\/var\/log\/modsec_audit.log/\/dev\/stdout/g' /usr/local/openresty/nginx/conf/modsecurity.conf && \
-  sed -i 's/DetectionOnly/On/g' /usr/local/openresty/nginx/conf/modsecurity.conf && \
-  rm -rf modsecurity-* && \
-  ln -s /usr/local/openresty/nginx/sbin/nginx /usr/local/bin/nginx && \
-  ldconfig
-
-# Set the working directory.
-WORKDIR /home/openresty
-
-# Add files to the container.
-ADD . /home/openresty
-
-# Expose volumes.
-VOLUME ["/etc/nginx"]
-
-# Set the entrypoint script.
-ENTRYPOINT ["./entrypoint"]
+  rm -rf naxsi-* && \
+  ln -s /usr/local/openresty/nginx/sbin/nginx /usr/local/bin/nginx
 
 # Define the default command.
-CMD ["nginx", "-c", "/etc/nginx/nginx.conf"]
+CMD ["nginx", "-g", "daemon off; error_log /dev/stderr info; access_log /dev/stdout;"]
