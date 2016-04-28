@@ -17,7 +17,15 @@ RUN \
   cd .. && \
   rm -rf openresty-* && \
   rm -rf naxsi-* && \
-  ln -s /usr/local/openresty/nginx/sbin/nginx /usr/local/bin/nginx
+  sed -i 's/mime.types/\/usr\/local\/openresty\/nginx\/conf\/mime.types/g' /usr/local/openresty/nginx/conf/nginx.conf && \
+  sed -i 's/#access_log/access_log \/dev\/stdout;#/g' /usr/local/openresty/nginx/conf/nginx.conf && \
+  cp -pR '/usr/local/openresty/nginx/conf/.' '/etc/nginx/' && \
+  echo "daemon off;error_log /dev/stdout;" >> "/etc/nginx/nginx.conf" && \
+  ln -s /usr/local/openresty/nginx/sbin/nginx /usr/local/bin/nginx && \
+  apk del build-deps && \
+  apk add \
+    libpcrecpp libpcre16 libpcre32 openssl libssl1.0 pcre libgcc libstdc++ && \
+  rm -rf /var/cache/apk/*
 
 # Define the default command.
-CMD ["nginx", "-g", "daemon off; error_log /dev/stderr info; access_log /dev/stdout;"]
+CMD ["nginx", "-c", "/etc/nginx/nginx.conf"]
