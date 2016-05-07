@@ -10,7 +10,9 @@ RUN \
   curl -sL https://github.com/nbs-system/naxsi/archive/0.54.tar.gz | tar zxf - && \
   curl -sL https://openresty.org/download/openresty-1.9.7.4.tar.gz | tar zxf - && \
   cd openresty-* && \
-  ./configure --add-module=../naxsi-*/naxsi_src/ --with-pcre-jit --with-ipv6 && \
+  ./configure --add-module=../naxsi-*/naxsi_src/ \
+    --with-luajit --with-pcre-jit \
+    --with-http_realip_module --with-ipv6 && \
   make && \
   make install && \
   make clean && \
