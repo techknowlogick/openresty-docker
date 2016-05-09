@@ -6,7 +6,7 @@ RUN \
    --virtual build-deps \
    make gcc musl-dev \
    pcre-dev openssl-dev zlib-dev ncurses-dev readline-dev \
-   curl perl && \
+   curl perl libmaxminddb && \
   curl -sL https://github.com/nbs-system/naxsi/archive/0.54.tar.gz | tar zxf - && \
   curl -sL https://openresty.org/download/openresty-1.9.7.4.tar.gz | tar zxf - && \
   cd openresty-* && \
