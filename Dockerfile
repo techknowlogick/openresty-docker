@@ -6,15 +6,16 @@ RUN \
    --virtual build-deps \
    make gcc musl-dev \
    pcre-dev openssl-dev zlib-dev ncurses-dev readline-dev \
-   curl perl libmaxminddb libmaxminddb-dev && \
+   curl perl && \
+   #libmaxminddb libmaxminddb-dev && \
   curl -sL https://github.com/nbs-system/naxsi/archive/0.54.tar.gz | tar zxf - && \
   curl -sL https://github.com/leev/ngx_http_geoip2_module/archive/1.1.tar.gz | tar zxf - && \
   curl -sL https://openresty.org/download/openresty-1.9.7.4.tar.gz | tar zxf - && \
   cd openresty-* && \
   ./configure --add-module=../naxsi-*/naxsi_src/ \
     --with-luajit --with-pcre-jit \
-    --with-http_realip_module --with-ipv6 \
-    --add-module=../ngx_http_geoip2_module*/ && \
+    --with-http_realip_module --with-ipv6 && \
+    #--add-module=../ngx_http_geoip2_module*/ && \
   make && \
   make install && \
   make clean && \
