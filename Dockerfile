@@ -40,7 +40,7 @@ RUN \
   tar -xzvf openresty-*.tar.gz && \
   rm -f openresty-*.tar.gz && \
   cd openresty-* && \
-  ./configure --with-pcre-jit --with-ipv6 --add-module=../modsecurity-*/nginx/modsecurity && \
+  ./configure --with-http_realip_module --with-pcre-jit --with-ipv6 --add-module=../modsecurity-*/nginx/modsecurity && \
   make && \
   make install && \
   make clean && \
